@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Azeret_Mono as Geist_Mono } from 'next/font/google';
 import "./globals.css";
 import { PageTransition } from "@/components/ui/page-transition";
 import { FloatingDockDemo } from "@/components/floating-dock";
+import { HamburgerMenu } from "@/components/hamburger-menu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +32,14 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <PageTransition>{children}</PageTransition>
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 hidden md:block">
           <FloatingDockDemo />
+        </div>
+        <div className="fixed top-4 right-4 z-50 md:hidden">
+          <HamburgerMenu />
         </div>
       </body>
     </html>
   );
 }
+

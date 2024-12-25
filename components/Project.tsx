@@ -10,13 +10,13 @@ import { HoverEffect } from '@/components/ui/card-hover-effect'
 interface ProjectProps {
   title: string
   description: string
-  image: string
-  techStack: string[]
-  githubUrl: string
-  liveUrl: string
+  imageUrl: string
+  technologies: string[]
+  githubLink: string
+  liveLink: string
 }
 
-export function Project({ title, description, image, techStack, githubUrl, liveUrl }: ProjectProps) {
+export function Project({ title, description, imageUrl, technologies, githubLink, liveLink }: ProjectProps) {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -34,12 +34,12 @@ export function Project({ title, description, image, techStack, githubUrl, liveU
       <BackgroundGradient className="rounded-[22px]  p-4 sm:p-10 bg-black">
         <CardBody className="relative group">
           <div className="relative overflow-hidden rounded-lg">
-            <img src={image} alt={title} className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-110" />
+            <img src={imageUrl} alt={title} className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-110" />
           </div>
           <h3 className="mt-4 text-2xl font-bold text-white">{title}</h3>
           <p className="mt-2 text-sm text-gray-300">{description}</p>
           <div className="flex flex-wrap gap-2 mt-4">
-            {techStack.map((tech) => (
+            {technologies.map((tech) => (
               <span key={tech} className="px-2 py-1 text-xs font-semibold text-white bg-purple-600 rounded-full">
                 {tech}
               </span>
@@ -47,7 +47,7 @@ export function Project({ title, description, image, techStack, githubUrl, liveU
           </div>
           <div className="flex justify-between mt-6 space-x-4">
             <a 
-              href={githubUrl} 
+              href={githubLink} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="relative inline-flex overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 group"
@@ -58,7 +58,7 @@ export function Project({ title, description, image, techStack, githubUrl, liveU
               </span>
             </a>
             <a 
-              href={liveUrl} 
+              href={liveLink} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="relative inline-flex overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 group"

@@ -71,7 +71,7 @@ export function FloatingDockDemo() {
       icon: (
         <IconBrandGithub className="h-full w-full text-neutral-300 dark:text-neutral-200" />
       ),
-      href: "#",
+      href: "https://github.com/amandwivedi1357",
     },
   ];
   return (

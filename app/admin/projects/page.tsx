@@ -119,7 +119,7 @@ export default function ProjectsAdmin() {
     setEditingProject(project)
     setValue('title', project.title)
     setValue('description', project.description)
-    setValue('technologies', project.technologies.join(', '))
+    setValue('technologies', project.technologies.join(', ').split(', '))
     setValue('githubLink', project.githubLink)
     setValue('liveLink', project.liveLink)
     setImagePreview(project.imageUrl || null)
