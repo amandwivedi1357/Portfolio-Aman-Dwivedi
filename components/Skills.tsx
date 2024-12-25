@@ -17,6 +17,8 @@ const tools = [
   { name: 'Redux Developer Tools', icon: '/skills/redux.png' },
 ]
 
+ 
+
 const categories = ['All', 'Frontend', 'Backend', 'Database', 'ORMs']
 
 export function Skills() {
