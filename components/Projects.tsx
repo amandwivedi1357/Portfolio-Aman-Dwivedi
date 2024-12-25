@@ -23,14 +23,25 @@ export function Projects() {
           throw new Error('Failed to fetch projects')
         }
         const data = await response.json()
-        setProjects(data.map(project => ({
+        interface ProjectData {
+          title: string
+          description: string
+          imageUrl?: string
+          technologies: string[]
+          githubLink?: string
+          liveLink?: string
+        }
+
+        const fetchedProjects: ProjectData[] = data.map((project: any) => ({
           title: project.title,
           description: project.description,
-          imageUrl: project.imageUrl || '/default-project-image.png', 
+          imageUrl: project.imageUrl || '/default-project-image.png',
           technologies: project.technologies,
           githubLink: project.githubLink || '#',
           liveLink: project.liveLink || '#'
-        })))
+        }))
+
+        setProjects(fetchedProjects)
         setLoading(false)
       } catch (error) {
         console.error('Error fetching projects:', error)
@@ -60,10 +71,10 @@ export function Projects() {
               key={index}
               title={project.title}
               description={project.description}
-              image={project.imageUrl}
-              techStack={project.technologies}
-              githubUrl={project.githubLink}
-              liveUrl={project.liveLink}
+              imageUrl={project.imageUrl || ''}
+              technologies={project.technologies}
+              githubLink={project.githubLink || ''}
+              liveLink={project.liveLink || ''}
             />
           ))}
         </div>
