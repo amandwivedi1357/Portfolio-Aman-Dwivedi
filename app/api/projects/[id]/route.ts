@@ -73,7 +73,10 @@ export async function DELETE(
   }
 }
 
-export async function PUT(request: NextRequest, context: { params: { id: string } }) {
+export async function PUT(
+    request: NextRequest, 
+    { params }: { params: { id: string } }
+  ) {
     try {
       const formData = await request.formData()
       
@@ -87,7 +90,7 @@ export async function PUT(request: NextRequest, context: { params: { id: string 
       // Process technologies
       const technologies = technologiesStr.split(',').map(tech => tech.trim()).filter(tech => tech !== '')
       
-      const projectId = context.params.id
+      const projectId = params.id
   
       // Find existing project to handle old image
       const existingProject = await prisma.project.findUnique({
