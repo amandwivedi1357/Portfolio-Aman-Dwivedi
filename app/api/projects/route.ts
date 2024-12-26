@@ -4,9 +4,7 @@ import { uploadToFirebaseAdmin, deleteFromFirebaseAdmin } from '@/lib/firebase-a
 import { z } from 'zod'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-
 const prisma = new PrismaClient()
-
 const ProjectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
@@ -15,7 +13,6 @@ const ProjectSchema = z.object({
   liveLink: z.string().url("Invalid live link").optional(),
   imageUrl: z.string().optional()
 })
-
 export async function GET() {
   try {
     const projects = await prisma.project.findMany()
@@ -27,14 +24,12 @@ export async function GET() {
     )
   }
 }
-
 export async function POST(request: NextRequest) {
   // Disable session check for now during debugging
   // const session = await getServerSession(authOptions)
   // if (!session) {
   //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   // }
-
   try {
     const formData = await request.formData()
     
@@ -56,7 +51,6 @@ export async function POST(request: NextRequest) {
       // Upload to Firebase Admin
       imageUrl = await uploadToFirebaseAdmin(imageFile, 'projects')
     }
-
     // Validate the data
     const validatedData = ProjectSchema.parse({
       title,
@@ -66,12 +60,10 @@ export async function POST(request: NextRequest) {
       liveLink,
       imageUrl
     })
-
     // Create project in database
     const project = await prisma.project.create({
       data: validatedData
     })
-
     return NextResponse.json(project, { status: 201 })
   } catch (error) {
     console.error('Project Creation Error:', error)
@@ -83,21 +75,18 @@ export async function POST(request: NextRequest) {
         details: error.errors 
       }, { status: 400 })
     }
-
     return NextResponse.json(
       { details: 'Failed to create project', error: String(error) }, 
       { status: 500 }
     )
   }
 }
-
 export async function PUT(request: NextRequest) {
   // Disable session check for now during debugging
   // const session = await getServerSession(authOptions)
   // if (!session) {
   //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   // }
-
   try {
     const formData = await request.formData()
     
@@ -114,19 +103,16 @@ export async function PUT(request: NextRequest) {
     // Get project ID from query params
     const url = new URL(request.url)
     const projectId = url.pathname.split('/').pop()
-
     if (!projectId) {
       return NextResponse.json(
         { details: 'Project ID is required' }, 
         { status: 400 }
       )
     }
-
     // Find existing project to handle old image
     const existingProject = await prisma.project.findUnique({
       where: { id: projectId }
     })
-
     // Handle file upload
     let imageUrl: string | undefined
     const imageFile = formData.get('imageFile') as File | null
@@ -141,11 +127,9 @@ export async function PUT(request: NextRequest) {
           console.warn('Failed to delete old image:', deleteError)
         }
       }
-
       // Upload new image
       imageUrl = await uploadToFirebaseAdmin(imageFile, 'projects')
     }
-
     // Validate the data
     const validatedData = ProjectSchema.parse({
       title,
@@ -155,13 +139,11 @@ export async function PUT(request: NextRequest) {
       liveLink,
       imageUrl
     })
-
     // Update project in database
     const project = await prisma.project.update({
       where: { id: projectId },
       data: validatedData
     })
-
     return NextResponse.json(project)
   } catch (error) {
     console.error('Project Update Error:', error)
@@ -173,28 +155,23 @@ export async function PUT(request: NextRequest) {
         details: error.errors 
       }, { status: 400 })
     }
-
     return NextResponse.json(
       { details: 'Failed to update project', error: String(error) }, 
       { status: 500 }
     )
   }
 }
-
 export async function DELETE(request: NextRequest) {
   try {
     // Log the full request URL for debugging
     console.log('DELETE Request URL:', request.url)
-
     const url = new URL(request.url)
     const pathParts = url.pathname.split('/').filter(Boolean)
     
     // Log path parts for debugging
     console.log('Path Parts:', pathParts)
-
     // Extract project ID (last part of the path)
     const projectId = pathParts[pathParts.length - 1]
-
     if (!projectId) {
       console.error('No project ID provided in the request')
       return NextResponse.json(
@@ -202,14 +179,11 @@ export async function DELETE(request: NextRequest) {
         { status: 400 }
       )
     }
-
     console.log('Attempting to delete project with ID:', projectId)
-
     // Find existing project to delete associated image
     const existingProject = await prisma.project.findUnique({
       where: { id: projectId }
     })
-
     if (!existingProject) {
       console.error(`Project with ID ${projectId} not found`)
       return NextResponse.json(
@@ -217,7 +191,6 @@ export async function DELETE(request: NextRequest) {
         { status: 404 }
       )
     }
-
     // Delete image from Firebase if exists
     if (existingProject.imageUrl) {
       try {
@@ -229,14 +202,11 @@ export async function DELETE(request: NextRequest) {
         // Continue with project deletion even if image deletion fails
       }
     }
-
     // Delete project from database
     const deletedProject = await prisma.project.delete({
       where: { id: projectId }
     })
-
     console.log('Project deleted successfully:', deletedProject)
-
     return NextResponse.json({ 
       message: 'Project deleted successfully', 
       projectId: deletedProject.id 

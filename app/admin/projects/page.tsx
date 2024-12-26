@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useEffect, ChangeEvent } from 'react'
 import { motion } from 'framer-motion'
 import { z } from 'zod'
@@ -7,7 +6,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
-
 const ProjectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
@@ -18,7 +16,6 @@ const ProjectSchema = z.object({
   liveLink: z.string().url("Invalid live link").optional(),
   imageFile: z.instanceof(File).optional()
 })
-
 type Project = {
   id?: string
   title: string
@@ -28,12 +25,10 @@ type Project = {
   liveLink?: string
   imageUrl?: string
 }
-
 export default function ProjectsAdmin() {
   const [projects, setProjects] = useState<Project[]>([])
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-
   const { 
     register, 
     handleSubmit, 
@@ -43,11 +38,9 @@ export default function ProjectsAdmin() {
   } = useForm<Project & { imageFile?: File }>({
     resolver: zodResolver(ProjectSchema)
   })
-
   useEffect(() => {
     fetchProjects()
   }, [])
-
   const fetchProjects = async () => {
     try {
       const response = await fetch('/api/projects')
@@ -58,7 +51,6 @@ export default function ProjectsAdmin() {
       toast.error('Error fetching projects')
     }
   }
-
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -70,7 +62,6 @@ export default function ProjectsAdmin() {
       reader.readAsDataURL(file)
     }
   }
-
   const onSubmit = async (data: Project & { imageFile?: File }) => {
     try {
       const formData = new FormData()
@@ -84,17 +75,13 @@ export default function ProjectsAdmin() {
       if (data.imageFile) {
         formData.append('imageFile', data.imageFile)
       }
-
       const endpoint = editingProject ? `/api/projects/${editingProject.id}` : '/api/projects'
       const method = editingProject ? 'PUT' : 'POST'
-
       const response = await fetch(endpoint, {
         method,
         body: formData
       })
-
       if (!response.ok) throw new Error('Failed to save project')
-
       const result = await response.json()
       
       if (editingProject) {
@@ -104,7 +91,6 @@ export default function ProjectsAdmin() {
         setProjects([...projects, result])
         toast.success('Project added successfully')
       }
-
       // Reset form
       reset()
       setEditingProject(null)
@@ -114,7 +100,6 @@ export default function ProjectsAdmin() {
       console.error(error)
     }
   }
-
   const handleEdit = (project: Project) => {
     setEditingProject(project)
     setValue('title', project.title)
@@ -124,26 +109,28 @@ export default function ProjectsAdmin() {
     setValue('liveLink', project.liveLink)
     setImagePreview(project.imageUrl || null)
   }
-
   const cancelEdit = () => {
     setEditingProject(null)
     reset()
     setImagePreview(null)
   }
-
   const handleDelete = async (projectId: string) => {
     try {
       const response = await fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
-      if (!response.ok) throw new Error('Failed to delete project')
+      
+      if (!response.ok) {
+        // Try to get more detailed error information
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.details || 'Failed to delete project')
+      }
       
       setProjects(projects.filter(p => p.id !== projectId))
       toast.success('Project deleted successfully')
     } catch (error) {
-      toast.error('Error deleting project')
+      toast.error(error instanceof Error ? error.message : 'Error deleting project')
       console.error(error)
     }
   }
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -169,7 +156,6 @@ export default function ProjectsAdmin() {
             <p className="text-red-500 mt-1">{errors.title.message}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="description" className="block mb-2">Description</label>
           <textarea 
@@ -183,7 +169,6 @@ export default function ProjectsAdmin() {
             <p className="text-red-500 mt-1">{errors.description.message}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="technologies" className="block mb-2">Technologies (comma-separated)</label>
           <input 
@@ -196,7 +181,6 @@ export default function ProjectsAdmin() {
             <p className="text-red-500 mt-1">{errors.technologies.message}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="githubLink" className="block mb-2">GitHub Link (Optional)</label>
           <input 
@@ -209,7 +193,6 @@ export default function ProjectsAdmin() {
             <p className="text-red-500 mt-1">{errors.githubLink.message}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="liveLink" className="block mb-2">Live Link (Optional)</label>
           <input 
@@ -222,7 +205,6 @@ export default function ProjectsAdmin() {
             <p className="text-red-500 mt-1">{errors.liveLink.message}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="imageFile" className="block mb-2">Project Image (Optional)</label>
           <input 
@@ -244,7 +226,6 @@ export default function ProjectsAdmin() {
             </div>
           )}
         </div>
-
         <div className="flex space-x-4">
           <button 
             type="submit" 
@@ -264,7 +245,6 @@ export default function ProjectsAdmin() {
           )}
         </div>
       </form>
-
       <div className="bg-gray-800 p-6 rounded-lg">
         <h2 className="text-2xl font-semibold mb-4">Existing Projects</h2>
         {projects.length === 0 ? (
