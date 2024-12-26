@@ -75,10 +75,10 @@ export async function DELETE(
 
 export async function PUT(
     request: NextRequest,
-    context: { params: { id: string } }
+    { params }: { params: { id: string } }
   ) {
     try {
-      const { id: projectId } = context.params;
+      const projectId = params.id;
   
       if (!projectId) {
         return NextResponse.json({ details: 'Project ID is required' }, { status: 400 });
