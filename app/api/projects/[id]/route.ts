@@ -73,83 +73,83 @@ export async function DELETE(
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  try {
-    const formData = await request.formData()
-    
-    // Extract text fields
-    const title = formData.get('title') as string
-    const description = formData.get('description') as string
-    const technologiesStr = formData.get('technologies') as string
-    const githubLink = formData.get('githubLink') as string | null
-    const liveLink = formData.get('liveLink') as string | null
-    
-    // Process technologies
-    const technologies = technologiesStr.split(',').map(tech => tech.trim()).filter(tech => tech !== '')
-    
-    const projectId = params.id
-
-    // Find existing project to handle old image
-    const existingProject = await prisma.project.findUnique({
-      where: { id: projectId }
-    })
-
-    if (!existingProject) {
+export async function PUT(request: NextRequest, context: { params: { id: string } }) {
+    try {
+      const formData = await request.formData()
+      
+      // Extract text fields
+      const title = formData.get('title') as string
+      const description = formData.get('description') as string
+      const technologiesStr = formData.get('technologies') as string
+      const githubLink = formData.get('githubLink') as string | null
+      const liveLink = formData.get('liveLink') as string | null
+      
+      // Process technologies
+      const technologies = technologiesStr.split(',').map(tech => tech.trim()).filter(tech => tech !== '')
+      
+      const projectId = context.params.id
+  
+      // Find existing project to handle old image
+      const existingProject = await prisma.project.findUnique({
+        where: { id: projectId }
+      })
+  
+      if (!existingProject) {
+        return NextResponse.json(
+          { details: 'Project not found' }, 
+          { status: 404 }
+        )
+      }
+  
+      // Handle file upload
+      let imageUrl: string | undefined = existingProject.imageUrl ?? undefined
+      const imageFile = formData.get('imageFile')
+      
+      if (imageFile && imageFile instanceof File && imageFile.size > 0) {
+        // Delete old image if exists
+        if (existingProject.imageUrl) {
+          try {
+            await deleteFromFirebaseAdmin(existingProject.imageUrl)
+          } catch (deleteError) {
+            console.warn('Failed to delete old image:', deleteError)
+          }
+        }
+        
+        // Upload new image
+        imageUrl = await uploadToFirebaseAdmin(imageFile, 'projects')
+      }
+  
+      // Validate the data
+      const validatedData = ProjectSchema.parse({
+        title,
+        description,
+        technologies,
+        githubLink,
+        liveLink,
+        imageUrl
+      })
+  
+      // Update project in database
+      const project = await prisma.project.update({
+        where: { id: projectId },
+        data: validatedData
+      })
+  
+      return NextResponse.json(project)
+    } catch (error) {
+      console.error('Project Update Error:', error)
+      
+      // Handle Zod validation errors
+      if (error instanceof z.ZodError) {
+        return NextResponse.json({ 
+          error: 'Validation failed', 
+          details: error.errors 
+        }, { status: 400 })
+      }
+  
       return NextResponse.json(
-        { details: 'Project not found' }, 
-        { status: 404 }
+        { details: 'Failed to update project', error: String(error) }, 
+        { status: 500 }
       )
     }
-
-    // Handle file upload
-    let imageUrl: string | undefined = existingProject.imageUrl ?? undefined
-    const imageFile = formData.get('imageFile')
-    
-    if (imageFile && imageFile instanceof File && imageFile.size > 0) {
-      // Delete old image if exists
-      if (existingProject.imageUrl) {
-        try {
-          await deleteFromFirebaseAdmin(existingProject.imageUrl)
-        } catch (deleteError) {
-          console.warn('Failed to delete old image:', deleteError)
-        }
-      }
-      
-      // Upload new image
-      imageUrl = await uploadToFirebaseAdmin(imageFile, 'projects')
-    }
-
-    // Validate the data
-    const validatedData = ProjectSchema.parse({
-      title,
-      description,
-      technologies,
-      githubLink,
-      liveLink,
-      imageUrl
-    })
-
-    // Update project in database
-    const project = await prisma.project.update({
-      where: { id: projectId },
-      data: validatedData
-    })
-
-    return NextResponse.json(project)
-  } catch (error) {
-    console.error('Project Update Error:', error)
-    
-    // Handle Zod validation errors
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ 
-        error: 'Validation failed', 
-        details: error.errors 
-      }, { status: 400 })
-    }
-
-    return NextResponse.json(
-      { details: 'Failed to update project', error: String(error) }, 
-      { status: 500 }
-    )
   }
-}
