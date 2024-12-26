@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -21,24 +19,50 @@ export const AnimatedTestimonials = ({
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
 
+  // Memoize rotation calculations
+  const precomputedRotations = useMemo(() => 
+    testimonials.map(() => Math.floor(Math.random() * 21) - 10),
+    [testimonials]
+  );
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
-  };
+  }, [testimonials]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  }, [testimonials]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'ArrowLeft') handlePrev();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNext, handlePrev]);
 
   useEffect(() => {
     if (autoplay && mounted) {
       const interval = setInterval(handleNext, 5000);
       return () => clearInterval(interval);
     }
-  }, [autoplay, mounted]);
+  }, [autoplay, mounted, handleNext]);
+
+  // Handle empty testimonials array
+  if (!testimonials || testimonials.length === 0) {
+    return (
+      <div className="bg-black min-h-screen flex items-center justify-center">
+        <div className="text-white">No testimonials available</div>
+      </div>
+    );
+  }
 
   if (!mounted) {
     return (
@@ -47,10 +71,6 @@ export const AnimatedTestimonials = ({
       </div>
     );
   }
-
-  const precomputedRotations = testimonials.map(() => 
-    Math.floor(Math.random() * 21) - 10
-  );
 
   return (
     <div className="max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-20 bg-black">
@@ -157,6 +177,7 @@ export const AnimatedTestimonials = ({
           <div className="flex gap-4 pt-12 md:pt-0">
             <button 
               onClick={handlePrev}
+              aria-label="Previous Testimonial"
               className="h-7 w-7 rounded-full bg-neutral-800 flex items-center justify-center group/button"
             >
               <svg 
@@ -171,6 +192,7 @@ export const AnimatedTestimonials = ({
             </button>
             <button 
               onClick={handleNext}
+              aria-label="Next Testimonial"
               className="h-7 w-7 rounded-full bg-neutral-800 flex items-center justify-center group/button"
             >
               <svg 
