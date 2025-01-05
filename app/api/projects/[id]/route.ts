@@ -15,12 +15,17 @@ const ProjectSchema = z.object({
   imageUrl: z.string().optional()
 })
 
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+  req: NextRequest,
+  props: Props
+) {
   try {
-    const projectId = params.id
+    const projectId = props.params.id
 
     if (!projectId) {
       return NextResponse.json(
@@ -72,17 +77,17 @@ export async function DELETE(
 }
 
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+  req: NextRequest,
+  props: Props
+) {
   try {
-    const projectId = params.id
+    const projectId = props.params.id
 
     if (!projectId) {
       return NextResponse.json({ details: 'Project ID is required' }, { status: 400 })
     }
 
-    const formData = await request.formData()
+    const formData = await req.formData()
 
     // Extract text fields
     const title = formData.get('title') as string
