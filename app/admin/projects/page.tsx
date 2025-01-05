@@ -131,18 +131,18 @@ export default function ProjectsAdmin() {
     setImagePreview(null)
   }
 
-  const handleDelete = async (projectId: string) => {
-    try {
-      const response = await fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
-      if (!response.ok) throw new Error('Failed to delete project')
+  // const handleDelete = async (projectId: string) => {
+  //   try {
+  //     const response = await fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
+  //     if (!response.ok) throw new Error('Failed to delete project')
       
-      setProjects(projects.filter(p => p.id !== projectId))
-      toast.success('Project deleted successfully')
-    } catch (error) {
-      toast.error('Error deleting project')
-      console.error(error)
-    }
-  }
+  //     setProjects(projects.filter(p => p.id !== projectId))
+  //     toast.success('Project deleted successfully')
+  //   } catch (error) {
+  //     toast.error('Error deleting project')
+  //     console.error(error)
+  //   }
+  // }
 
   return (
     <motion.div

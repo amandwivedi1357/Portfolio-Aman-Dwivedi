@@ -15,21 +15,17 @@ const ProjectSchema = z.object({
   imageUrl: z.string().optional()
 })
 
-type Props = {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
 export async function DELETE(
-  req: NextRequest,
-  props: Props
+  request: NextRequest, 
+  { params }: { params: { id: string } }
 ) {
   try {
-    const projectId = props.params.id
+    // REMOVE ALL AUTHENTICATION CHECKS
+    const projectId = params.id
 
     if (!projectId) {
       return NextResponse.json(
-        { details: 'Project ID is required' },
+        { details: 'Project ID is required' }, 
         { status: 400 }
       )
     }
@@ -41,7 +37,7 @@ export async function DELETE(
 
     if (!existingProject) {
       return NextResponse.json(
-        { details: 'Project not found', projectId },
+        { details: 'Project not found', projectId }, 
         { status: 404 }
       )
     }
@@ -60,102 +56,103 @@ export async function DELETE(
       where: { id: projectId }
     })
 
-    return NextResponse.json({
-      message: 'Project deleted successfully',
-      projectId: deletedProject.id
+    return NextResponse.json({ 
+      message: 'Project deleted successfully', 
+      projectId: deletedProject.id 
     })
   } catch (error) {
     console.error('Project Deletion Error:', error)
+    
     return NextResponse.json(
-      {
-        details: 'Failed to delete project',
+      { 
+        details: 'Failed to delete project', 
         error: String(error)
-      },
+      }, 
       { status: 500 }
     )
   }
 }
 
 export async function PUT(
-  req: NextRequest,
-  props: Props
-) {
-  try {
-    const projectId = props.params.id
-
-    if (!projectId) {
-      return NextResponse.json({ details: 'Project ID is required' }, { status: 400 })
-    }
-
-    const formData = await req.formData()
-
-    // Extract text fields
-    const title = formData.get('title') as string
-    const description = formData.get('description') as string
-    const technologiesStr = formData.get('technologies') as string
-    const githubLink = formData.get('githubLink') as string | null
-    const liveLink = formData.get('liveLink') as string | null
-
-    // Process technologies
-    const technologies = technologiesStr.split(',').map(tech => tech.trim()).filter(tech => tech !== '')
-
-    // Find existing project to handle old image
-    const existingProject = await prisma.project.findUnique({
-      where: { id: projectId }
-    })
-
-    if (!existingProject) {
-      return NextResponse.json({ details: 'Project not found' }, { status: 404 })
-    }
-
-    // Handle file upload
-    let imageUrl: string | undefined = existingProject.imageUrl ?? undefined
-    const imageFile = formData.get('imageFile')
-
-    if (imageFile && imageFile instanceof File && imageFile.size > 0) {
-      // Delete old image if exists
-      if (existingProject.imageUrl) {
-        try {
-          await deleteFromFirebaseAdmin(existingProject.imageUrl)
-        } catch (deleteError) {
-          console.warn('Failed to delete old image:', deleteError)
-        }
+    request: NextRequest,
+    {params}: { params: { id: string } }
+  ) {
+    try {
+      const projectId = params.id;
+  
+      if (!projectId) {
+        return NextResponse.json({ details: 'Project ID is required' }, { status: 400 });
       }
-
-      // Upload new image
-      imageUrl = await uploadToFirebaseAdmin(imageFile, 'projects')
-    }
-
-    // Validate the data
-    const validatedData = ProjectSchema.parse({
-      title,
-      description,
-      technologies,
-      githubLink,
-      liveLink,
-      imageUrl
-    })
-
-    // Update project in database
-    const project = await prisma.project.update({
-      where: { id: projectId },
-      data: validatedData
-    })
-
-    return NextResponse.json(project)
-  } catch (error) {
-    console.error('Project Update Error:', error)
-
-    if (error instanceof z.ZodError) {
+  
+      const formData = await request.formData();
+  
+      // Extract text fields
+      const title = formData.get('title') as string;
+      const description = formData.get('description') as string;
+      const technologiesStr = formData.get('technologies') as string;
+      const githubLink = formData.get('githubLink') as string | null;
+      const liveLink = formData.get('liveLink') as string | null;
+  
+      // Process technologies
+      const technologies = technologiesStr.split(',').map(tech => tech.trim()).filter(tech => tech !== '');
+  
+      // Find existing project to handle old image
+      const existingProject = await prisma.project.findUnique({
+        where: { id: projectId },
+      });
+  
+      if (!existingProject) {
+        return NextResponse.json({ details: 'Project not found' }, { status: 404 });
+      }
+  
+      // Handle file upload
+      let imageUrl: string | undefined = existingProject.imageUrl ?? undefined;
+      const imageFile = formData.get('imageFile');
+  
+      if (imageFile && imageFile instanceof File && imageFile.size > 0) {
+        // Delete old image if exists
+        if (existingProject.imageUrl) {
+          try {
+            await deleteFromFirebaseAdmin(existingProject.imageUrl);
+          } catch (deleteError) {
+            console.warn('Failed to delete old image:', deleteError);
+          }
+        }
+  
+        // Upload new image
+        imageUrl = await uploadToFirebaseAdmin(imageFile, 'projects');
+      }
+  
+      // Validate the data
+      const validatedData = ProjectSchema.parse({
+        title,
+        description,
+        technologies,
+        githubLink,
+        liveLink,
+        imageUrl,
+      });
+  
+      // Update project in database
+      const project = await prisma.project.update({
+        where: { id: projectId },
+        data: validatedData,
+      });
+  
+      return NextResponse.json(project);
+    } catch (error) {
+      console.error('Project Update Error:', error);
+  
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          { error: 'Validation failed', details: error.errors },
+          { status: 400 }
+        );
+      }
+  
       return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
-        { status: 400 }
-      )
+        { details: 'Failed to update project', error: String(error) },
+        { status: 500 }
+      );
     }
-
-    return NextResponse.json(
-      { details: 'Failed to update project', error: String(error) },
-      { status: 500 }
-    )
   }
-}
