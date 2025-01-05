@@ -336,7 +336,7 @@ export default function ProjectsAdmin() {
                     Edit
                   </button>
                   <button 
-                    onClick={() => handleDelete(project.id!)}
+                    //onClick={() => handleDelete(project.id!)}
                     className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
                   >
                     Delete
