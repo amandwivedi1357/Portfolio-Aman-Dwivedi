@@ -115,15 +115,15 @@ export default function ProjectsAdmin() {
     }
   }
 
-  const handleEdit = (project: Project) => {
-    setEditingProject(project)
-    setValue('title', project.title)
-    setValue('description', project.description)
-    setValue('technologies', project.technologies.join(', ').split(', '))
-    setValue('githubLink', project.githubLink)
-    setValue('liveLink', project.liveLink)
-    setImagePreview(project.imageUrl || null)
-  }
+  // const handleEdit = (project: Project) => {
+  //   setEditingProject(project)
+  //   setValue('title', project.title)
+  //   setValue('description', project.description)
+  //   setValue('technologies', project.technologies.join(', ').split(', '))
+  //   setValue('githubLink', project.githubLink)
+  //   setValue('liveLink', project.liveLink)
+  //   setImagePreview(project.imageUrl || null)
+  // }
 
   const cancelEdit = () => {
     setEditingProject(null)
@@ -330,7 +330,7 @@ export default function ProjectsAdmin() {
                 </div>
                 <div className="flex space-x-2 mt-4">
                   <button 
-                    onClick={() => handleEdit(project)}
+                    //onClick={() => handleEdit(project)}
                     className="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded text-sm"
                   >
                     Edit
