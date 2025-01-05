@@ -15,20 +15,12 @@ const ProjectSchema = z.object({
   imageUrl: z.string().optional()
 })
 
-// Updated type definition for route params
-type RouteParams = {
-  params: {
-    id: string
-  },
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
 export async function DELETE(
   request: NextRequest,
-  context: RouteParams
-) {
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
   try {
-    const projectId = context.params.id
+    const projectId = params.id
 
     if (!projectId) {
       return NextResponse.json(
@@ -81,10 +73,10 @@ export async function DELETE(
 
 export async function PUT(
   request: NextRequest,
-  context: RouteParams
-) {
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
   try {
-    const projectId = context.params.id
+    const projectId = params.id
 
     if (!projectId) {
       return NextResponse.json({ details: 'Project ID is required' }, { status: 400 })
