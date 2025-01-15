@@ -47,15 +47,19 @@ const links = [
   },
 ];
 
-export function NavigationItems() {
+export function NavigationItems({ onItemClick }: { onItemClick?: () => void }) {
   return (
     <nav>
       <ul className="space-y-4">
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="flex text-white items-center space-x-2">
+            <Link 
+              href={link.href} 
+              className="flex text-white items-center space-x-2"
+              onClick={onItemClick}
+            >
               {link.icon}
-              <span >{link.title}</span>
+              <span>{link.title}</span>
             </Link>
           </li>
         ))}
@@ -63,4 +67,3 @@ export function NavigationItems() {
     </nav>
   );
 }
-

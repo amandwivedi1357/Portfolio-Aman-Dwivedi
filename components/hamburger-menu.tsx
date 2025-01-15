@@ -12,11 +12,11 @@ export function HamburgerMenu() {
   return (
     <>
       <Button variant="ghost" size="icon" onClick={() => setIsOpen(true)}>
-        <IconMenu2 className="h-6 w-6" />
+        <IconMenu2 className="h-10 w-10" />
       </Button>
       <Drawer open={isOpen} onClose={() => setIsOpen(false)}>
         <div className="p-4">
-          <NavigationItems />
+          <NavigationItems onItemClick={() => setIsOpen(false)} />
         </div>
       </Drawer>
     </>
