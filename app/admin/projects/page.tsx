@@ -115,15 +115,15 @@ export default function ProjectsAdmin() {
     }
   }
 
-  // const handleEdit = (project: Project) => {
-  //   setEditingProject(project)
-  //   setValue('title', project.title)
-  //   setValue('description', project.description)
-  //   setValue('technologies', project.technologies.join(', ').split(', '))
-  //   setValue('githubLink', project.githubLink)
-  //   setValue('liveLink', project.liveLink)
-  //   setImagePreview(project.imageUrl || null)
-  // }
+  const handleEdit = (project: Project) => {
+    setEditingProject(project)
+    setValue('title', project.title)
+    setValue('description', project.description)
+    setValue('technologies', project.technologies.join(', ').split(', '))
+    setValue('githubLink', project.githubLink)
+    setValue('liveLink', project.liveLink)
+    setImagePreview(project.imageUrl || null)
+  }
 
   const cancelEdit = () => {
     setEditingProject(null)
@@ -131,18 +131,18 @@ export default function ProjectsAdmin() {
     setImagePreview(null)
   }
 
-  // const handleDelete = async (projectId: string) => {
-  //   try {
-  //     const response = await fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
-  //     if (!response.ok) throw new Error('Failed to delete project')
+  const handleDelete = async (projectId: string) => {
+    try {
+      const response = await fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
+      if (!response.ok) throw new Error('Failed to delete project')
       
-  //     setProjects(projects.filter(p => p.id !== projectId))
-  //     toast.success('Project deleted successfully')
-  //   } catch (error) {
-  //     toast.error('Error deleting project')
-  //     console.error(error)
-  //   }
-  // }
+      setProjects(projects.filter(p => p.id !== projectId))
+      toast.success('Project deleted successfully')
+    } catch (error) {
+      toast.error('Error deleting project')
+      console.error(error)
+    }
+  }
 
   return (
     <motion.div
@@ -330,13 +330,13 @@ export default function ProjectsAdmin() {
                 </div>
                 <div className="flex space-x-2 mt-4">
                   <button 
-                    //onClick={() => handleEdit(project)}
+                    onClick={() => handleEdit(project)}
                     className="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded text-sm"
                   >
                     Edit
                   </button>
                   <button 
-                    //onClick={() => handleDelete(project.id!)}
+                    onClick={() => handleDelete(project.id!)}
                     className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
                   >
                     Delete
