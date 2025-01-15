@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { TextGenerateEffect } from './ui/text-generate-effect'
 import { MovingBorderButton } from './ui/moving-border-button'
 import { InfiniteMovingCards } from './ui/infinite-moving-cards'
@@ -16,8 +16,6 @@ const tools = [
   { name: 'Docker', icon: '/skills/dock.svg' },
   { name: 'Redux Developer Tools', icon: '/skills/redux.png' },
 ]
-
- 
 
 const categories = ['All', 'Frontend', 'Backend', 'Database', 'ORMs']
 
@@ -53,20 +51,81 @@ export function Skills() {
     <div className="py-20 bg-black text-white overflow-hidden">
       <div className="container mx-auto px-4">
         <SparkleProp Topic="Tools I Use" />
-        <div className="flex justify-center space-x-4 mb-10">
-          {categories.map((category) => (
-            <MovingBorderButton
-              key={category}
-              borderClassName="bg-[radial-gradient(purple_40%,transparent_60%)]"
-              containerClassName="group"
-              onClick={() => setFilter(category)}
-              className={`${
-                filter === category ? 'bg-purple-600' : 'bg-gray-800'
-              }  bg-black group-hover:bg-purple-900/20 text-white border-purple-500/20 transition-colors duration-300`}
-            >
-              {category}
-            </MovingBorderButton>
-          ))}
+        
+        {/* Horizontal Tabs for Large Screens */}
+        <div className="md:flex justify-center space-x-4 mb-10 hidden ">
+          <AnimatePresence>
+            {categories.map((category) => (
+              <motion.div
+                key={category}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: filter === category ? 1.05 : 1,
+                  transition: { duration: 0.3 }
+                }}
+                exit={{ opacity: 0, scale: 0.9 }}
+              >
+                <MovingBorderButton
+                  key={category}
+                  borderClassName={`
+                    ${filter === category 
+                      ? 'bg-[radial-gradient(purple_40%,transparent_60%)]' 
+                      : 'bg-transparent'}
+                  `}
+                  containerClassName="group"
+                  onClick={() => setFilter(category)}
+                  className={`
+                    ${filter === category 
+                      ? 'bg-purple-600' 
+                      : 'bg-gray-800'}
+                    bg-black 
+                    group-hover:bg-purple-900/20 
+                    text-white 
+                    border-purple-500/20 
+                    transition-colors 
+                    duration-300
+                    ${filter === category ? 'scale-105' : 'scale-100'}
+                  `}
+                >
+                  {category}
+                </MovingBorderButton>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Select Dropdown for Small Screens */}
+        <div className="md:hidden flex justify-center mb-10">
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="
+              w-full 
+              max-w-xs 
+              bg-gray-800 
+              text-white 
+              py-2 
+              px-3 
+              rounded-lg 
+              border 
+              border-purple-500/20 
+              focus:outline-none 
+              focus:ring-2 
+              focus:ring-purple-600
+            "
+          >
+            {categories.map((category) => (
+              <option 
+                key={category} 
+                value={category}
+                className="bg-black text-white"
+              >
+                {category}
+              </option>
+            ))}
+          </select>
         </div>
         
         {loading ? (
