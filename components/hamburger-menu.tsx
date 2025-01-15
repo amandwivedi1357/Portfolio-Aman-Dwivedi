@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { IconMenu2 } from "@tabler/icons-react";
 import { Drawer } from "@/components/ui/drawer";
-import { Button } from "./ui/moving-border";
 import { NavigationItems } from "./navigation-items";
+import { Button } from "./ui/button";
 
 export function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);

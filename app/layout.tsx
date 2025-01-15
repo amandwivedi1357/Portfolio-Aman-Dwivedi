@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Azeret_Mono as Geist_Mono } from 'next/font/google';
 import "./globals.css";
-import { PageTransition } from "@/components/ui/page-transition";
 import { FloatingDockDemo } from "@/components/floating-dock";
 import { HamburgerMenu } from "@/components/hamburger-menu";
 
@@ -31,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} dark:bg-black relative`}
         suppressHydrationWarning
       >
-        <PageTransition>{children}</PageTransition>
+        {children}
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 hidden md:block">
           <FloatingDockDemo />
         </div>
