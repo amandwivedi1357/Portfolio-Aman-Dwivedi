@@ -12,7 +12,7 @@ export function HamburgerMenu() {
   return (
     <>
       <Button variant="ghost" size="icon" onClick={() => setIsOpen(true)}>
-        <IconMenu2 className="h-10 w-10" />
+        <IconMenu2 className="h-16 w-16" />
       </Button>
       <Drawer open={isOpen} onClose={() => setIsOpen(false)}>
         <div className="p-4">
