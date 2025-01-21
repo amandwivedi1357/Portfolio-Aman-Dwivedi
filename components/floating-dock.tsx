@@ -65,6 +65,8 @@ export function FloatingDockDemo() {
         <IconBrandLinkedin className="h-full w-full text-neutral-300 dark:text-neutral-200" />
       ),
       href: "https://linkedin.com/in/amandwivedi1357-ad",
+      target: "_blank",
+      rel: "noopener noreferrer",
     },
     {
       title: "GitHub",
@@ -72,6 +74,8 @@ export function FloatingDockDemo() {
         <IconBrandGithub className="h-full w-full text-neutral-300 dark:text-neutral-200" />
       ),
       href: "https://github.com/amandwivedi1357",
+      target: "_blank",
+      rel: "noopener noreferrer",
     },
   ];
   return (

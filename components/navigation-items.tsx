@@ -50,7 +50,7 @@ const links = [
 export function NavigationItems({ onItemClick }: { onItemClick?: () => void }) {
   return (
     <nav>
-      <ul className="space-y-4">
+      <ul className="space-y-4 z-100">
         {links.map((link) => (
           <li key={link.href}>
             <Link 

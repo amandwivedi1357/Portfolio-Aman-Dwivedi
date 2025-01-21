@@ -20,7 +20,7 @@ export default function Home() {
     </div> */}
 
 {/* <AuroraBackgroundDemo/> */}
-<SparklesPreview/>
+<SparklesPreview title="Aman Dwivedi"/>
    </div>
   );
 }

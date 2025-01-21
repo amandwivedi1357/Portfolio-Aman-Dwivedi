@@ -8,8 +8,46 @@ import Link from "next/link";
 import { SparklesCore } from "@/components/ui/sparkle";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { MovingBorderButton } from "@/components/ui/moving-border-button";
+import { useRouter } from "next/navigation";
 
+
+
+const Tooltip = ({ 
+  children, 
+  content 
+}: { 
+  children: React.ReactNode, 
+  content: string 
+}) => {
+  return (
+    <div className="group relative inline-block">
+      {children}
+      <div className="
+        absolute 
+        z-10 
+        bottom-full 
+        left-1/2 
+        transform 
+        -translate-x-1/2 
+        mb-2 
+        bg-gray-800 
+        text-white 
+        text-xs 
+        rounded 
+        py-1 
+        px-2 
+        opacity-0 
+        group-hover:opacity-100 
+        transition-opacity 
+        duration-300
+      ">
+        {content}
+      </div>
+    </div>
+  );
+};
 export default function About() {
+  const router = useRouter()
   const socialLinks = [
     {
       title: "GitHub",
@@ -83,6 +121,7 @@ export default function About() {
                 transition={{ delay: 0.7, duration: 0.5 }}
               >
                 <MovingBorderButton
+                onClick = {()=>router.push("/projects")}
                   borderRadius="1.75rem"
                   containerClassName="group"
                   borderClassName="bg-[radial-gradient(purple_40%,transparent_60%)]"
@@ -158,7 +197,11 @@ export default function About() {
                       <div className="relative bg-black/80 p-4 rounded-xl border border-white/10 flex items-center justify-center">
                         {link.title === 'GitHub' && <IconBrandGithub className="w-10 h-10 text-white group-hover:text-purple-300 transition-colors" />}
                         {link.title === 'LinkedIn' && <IconBrandLinkedin className="w-10 h-10 text-white group-hover:text-blue-400 transition-colors" />}
-                        {link.title === 'Email' && <IconMail className="w-10 h-10 text-white group-hover:text-green-400 transition-colors" />}
+                        {link.title === 'Email' && (
+                          <Tooltip content="amandwivedi1357@gmail.com">
+                            <IconMail className="w-10 h-10 text-white group-hover:text-green-400 transition-colors cursor-pointer" />
+                          </Tooltip>
+                        )}
                       </div>
                      
                     </motion.a>

@@ -6,6 +6,7 @@ import { TextGenerateEffect } from './ui/text-generate-effect'
 import { MovingBorderButton } from './ui/moving-border-button'
 import { InfiniteMovingCards } from './ui/infinite-moving-cards'
 import SparkleProp from './SparkleProp'
+import { SparklesCore } from './ui/sparkle'
 
 const tools = [
   { name: 'VS Code', icon: '/skills/vscode.jpg' },
@@ -50,10 +51,22 @@ export function Skills() {
   return (
     <div className="py-20 bg-black text-white overflow-hidden">
       <div className="container mx-auto px-4">
-        <SparkleProp Topic="Tools I Use" />
+      <h1 className="text-2xl md:text-4xl font-bold text-center mb-4">Skills</h1>
+      <div className="w-full flex justify-center relative h-1 md:h-20">
+        <div className="w-full max-w-[20rem] md:max-w-[40rem] h-2 md:h-40 relative">
+          {/* Gradients */}
+          <div className="absolute inset-x-10 md:inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+          <div className="absolute inset-x-10 md:inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+          <div className="absolute inset-x-32 md:inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
+          <div className="absolute inset-x-32 md:inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+
+          {/* Radial Gradient to prevent sharp edges */}
+          <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(175px_100px_at_top,transparent_20%,white)] md:[mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+        </div>
+      </div>
         
         {/* Horizontal Tabs for Large Screens */}
-        <div className="md:flex justify-center space-x-4 mb-10 hidden ">
+        <div className="md:flex  justify-center space-x-4 mb-10 hidden ">
           <AnimatePresence>
             {categories.map((category) => (
               <motion.div
@@ -80,7 +93,7 @@ export function Skills() {
                     ${filter === category 
                       ? 'bg-purple-600' 
                       : 'bg-gray-800'}
-                    bg-black 
+                    bg-black
                     group-hover:bg-purple-900/20 
                     text-white 
                     border-purple-500/20 
@@ -97,7 +110,7 @@ export function Skills() {
         </div>
 
         {/* Select Dropdown for Small Screens */}
-        <div className="md:hidden flex justify-center mb-10">
+        <div className="md:hidden z-50 flex justify-center my-20">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
