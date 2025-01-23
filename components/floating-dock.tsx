@@ -52,13 +52,13 @@ export function FloatingDockDemo() {
       ),
       href: "/projects",
     },
-    {
-      title: "Testimonials",
-      icon: (
-        <IconHeartQuestion className="h-full w-full text-neutral-300 dark:text-neutral-200" />
-      ),
-      href: "/testimonials",
-    },
+    // {
+    //   title: "Testimonials",
+    //   icon: (
+    //     <IconHeartQuestion className="h-full w-full text-neutral-300 dark:text-neutral-200" />
+    //   ),
+    //   href: "/testimonials",
+    // },
     {
       title: "LinkedIn",
       icon: (

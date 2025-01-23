@@ -30,11 +30,11 @@ const links = [
     icon: <IconBrandVite className="h-6 w-6" />,
     href: "/projects",
   },
-  {
-    title: "Testimonials",
-    icon: <IconHeartQuestion className="h-6 w-6" />,
-    href: "/testimonials",
-  },
+  // {
+  //   title: "Testimonials",
+  //   icon: <IconHeartQuestion className="h-6 w-6" />,
+  //   href: "/testimonials",
+  // },
   {
     title: "LinkedIn",
     icon: <IconBrandLinkedin className="h-6 w-6" />,

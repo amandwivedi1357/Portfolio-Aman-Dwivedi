@@ -38,9 +38,9 @@ export function Drawer({ children, open, onClose }: DrawerProps) {
                 <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md">
                   <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-gray-800 py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
-                      <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
+                      {/* <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                         Menu
-                      </Dialog.Title>
+                      </Dialog.Title> */}
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       {children}
