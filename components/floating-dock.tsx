@@ -64,7 +64,7 @@ export function FloatingDockDemo() {
       icon: (
         <IconBrandLinkedin className="h-full w-full text-neutral-300 dark:text-neutral-200" />
       ),
-      href: "https://linkedin.com/in/amandwivedi1357-ad",
+      href: "https://www.linkedin.com/in/aman-dwivedi-1357ad",
       target: "_blank",
       rel: "noopener noreferrer",
     },
