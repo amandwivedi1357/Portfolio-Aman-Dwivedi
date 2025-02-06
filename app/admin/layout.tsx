@@ -20,8 +20,7 @@ export default function AdminLayout({
   const pathname = usePathname()
 
   return (
-    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-      <SignedIn>
+    
         <div className="min-h-screen bg-black text-white flex">
           {/* Sidebar */}
           <div className="w-64 bg-gray-900 p-6 border-r border-gray-800">
@@ -56,10 +55,7 @@ export default function AdminLayout({
             </motion.div>
           </div>
         </div>
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </ClerkProvider>
+      
+   
   )
 }
