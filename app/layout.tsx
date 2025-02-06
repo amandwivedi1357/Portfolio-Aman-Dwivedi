@@ -4,6 +4,7 @@ import "./globals.css";
 import { FloatingDockDemo } from "@/components/floating-dock";
 import { HamburgerMenu } from "@/components/hamburger-menu";
 import { TopLoader } from "@/components/ui/top-loader";
+import { SinglePageContent } from "@/components/single-page-content";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,20 +21,16 @@ export const metadata: Metadata = {
   description: "Full Stack Web Developer Portfolio",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout() {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark scroll-smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} dark:bg-black relative`}
         suppressHydrationWarning
       >
         <TopLoader />
-        {children}
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 hidden md:block">
+        <SinglePageContent />
+        <div >
           <FloatingDockDemo />
         </div>
         <div className="fixed top-4 right-4 z-50 md:hidden">
@@ -43,4 +40,3 @@ export default function RootLayout({
     </html>
   );
 }
-

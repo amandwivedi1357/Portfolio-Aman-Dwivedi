@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { IconBrandGithub, IconBrandLinkedin, IconMail } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandLinkedin, IconMail, IconPhone, IconDownload } from "@tabler/icons-react";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import Link from "next/link";
@@ -46,6 +46,36 @@ const Tooltip = ({
     </div>
   );
 };
+
+const ContactInfo = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.1, duration: 0.5 }}
+      className="py-8 text-gray-300"
+    >
+      <div className="max-w-3xl mx-auto bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 shadow-lg">
+        <h3 className="text-2xl md:text-3xl font-bold text-center text-white mb-6">Contact Information</h3>
+        <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
+          <div className="flex items-center space-x-3 group">
+            <IconPhone className="w-8 h-8 text-white group-hover:text-blue-400 transition-colors" />
+            <span className="text-lg font-medium group-hover:text-blue-300 transition-colors">
+              +91 7440501499
+            </span>
+          </div>
+          <div className="flex items-center space-x-3 group">
+            <IconMail className="w-8 h-8 text-white group-hover:text-green-400 transition-colors" />
+            <span className="text-lg font-medium group-hover:text-green-300 transition-colors">
+              amandwivedi1357@gmail.com
+            </span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 export default function About() {
   const router = useRouter()
   const socialLinks = [
@@ -119,15 +149,31 @@ export default function About() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.5 }}
+                className="flex justify-center items-center space-x-4"
               >
                 <MovingBorderButton
-                onClick = {()=>router.push("/projects")}
                   borderRadius="1.75rem"
-                  containerClassName="group"
-                  borderClassName="bg-[radial-gradient(purple_40%,transparent_60%)]"
-                  className="bg-black group-hover:bg-purple-900/20 text-white border-purple-500/20 transition-colors duration-300"
+                  className="bg-white dark:bg-black text-black dark:text-white border-neutral-200 dark:border-slate-800"
+                  onClick={() => router.push('/projects')}
                 >
                   View My Work
+                </MovingBorderButton>
+                
+                <MovingBorderButton
+                  borderRadius="1.75rem"
+                  className="bg-white dark:bg-black text-black dark:text-white border-neutral-200 dark:border-slate-800"
+                  onClick={() => {
+                    // Assuming the resume is in the public folder
+                    const link = document.createElement('a');
+                    link.href = '/Aman_Dwivedi_fw20_0455.pdf';
+                    link.download = 'Aman_Dwivedi_fw20_0455.pdf';
+                    link.click();
+                  }}
+                >
+                  <div className="flex items-center space-x-2">
+                    <IconDownload className="w-5 h-5" />
+                    <span> Resume</span>
+                  </div>
                 </MovingBorderButton>
               </motion.div>
             </motion.div>
@@ -168,48 +214,53 @@ export default function About() {
             {/* Connect Section */}
             <div className="py-16 ">
               <div className="container mx-auto px-4">
-                <h3 className="text-3xl md:text-4xl font-bold text-center text-white mb-16 tracking-tight">
-                  Let's <span className="text-purple-400">Connect</span>
-                </h3>
-                <div className="flex justify-center space-x-8 md:space-x-12">
-                  {socialLinks.map((link, index) => (
-                    <motion.a
-                      key={link.title}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group relative"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ 
-                        opacity: 1, 
-                        y: 0,
-                        transition: { 
-                          delay: index * 0.1,
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 10 
-                        }
-                      }}
-                    >
-                      <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl opacity-0 group-hover:opacity-75 transition-opacity duration-300 blur-sm"></div>
-                      <div className="relative bg-black/80 p-4 rounded-xl border border-white/10 flex items-center justify-center">
-                        {link.title === 'GitHub' && <IconBrandGithub className="w-10 h-10 text-white group-hover:text-purple-300 transition-colors" />}
-                        {link.title === 'LinkedIn' && <IconBrandLinkedin className="w-10 h-10 text-white group-hover:text-blue-400 transition-colors" />}
-                        {link.title === 'Email' && (
-                          <Tooltip content="amandwivedi1357@gmail.com">
-                            <IconMail className="w-10 h-10 text-white group-hover:text-green-400 transition-colors cursor-pointer" />
-                          </Tooltip>
-                        )}
-                      </div>
-                     
-                    </motion.a>
-                  ))}
+                <div 
+                  id="lets-connect"  
+                  className="text-center space-y-4"
+                >
+                  <h3 className="text-3xl md:text-4xl font-bold text-center text-white mb-16 tracking-tight">
+                    Let's <span className="text-purple-400">Connect</span>
+                  </h3>
+                  <div className="flex justify-center space-x-8 md:space-x-12">
+                    {socialLinks.map((link, index) => (
+                      <motion.a
+                        key={link.title}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ 
+                          opacity: 1, 
+                          y: 0,
+                          transition: { 
+                            delay: index * 0.1,
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 10 
+                          }
+                        }}
+                      >
+                        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl opacity-0 group-hover:opacity-75 transition-opacity duration-300 blur-sm"></div>
+                        <div className="relative bg-black/80 p-4 rounded-xl border border-white/10 flex items-center justify-center">
+                          {link.title === 'GitHub' && <IconBrandGithub className="w-10 h-10 text-white group-hover:text-purple-300 transition-colors" />}
+                          {link.title === 'LinkedIn' && <IconBrandLinkedin className="w-10 h-10 text-white group-hover:text-blue-400 transition-colors" />}
+                          {link.title === 'Email' && (
+                            <Tooltip content="amandwivedi1357@gmail.com">
+                              <IconMail className="w-10 h-10 text-white group-hover:text-green-400 transition-colors cursor-pointer" />
+                            </Tooltip>
+                          )}
+                        </div>
+                      </motion.a>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </motion.div>
+          <ContactInfo />
         </div>
       </TracingBeam>
     </div>
