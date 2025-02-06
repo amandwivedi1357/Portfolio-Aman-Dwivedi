@@ -61,7 +61,11 @@ const links = [
     title: "Download Resume",
     icon: <IconDownload className="h-6 w-6" />,
     onClick: () => {
+      const link = document.createElement('a');
+      link.href = '/Aman_Dwivedi_fw20_0455.pdf';
+      link.download = 'Aman_Dwivedi_fw20_0455.pdf';
       window.open('/Aman_Dwivedi_fw20_0455.pdf', '_blank');
+      link.click();
     }
   },
   
